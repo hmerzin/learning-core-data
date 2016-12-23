@@ -13,7 +13,7 @@ import CoreData
 class NotebooksVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var namesArray: [String]?
-    var objectsArray = [NSManagedObject]()
+    var objectsArray = [Notebook]()
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     @IBOutlet weak var tableView: UITableView!
     
@@ -21,7 +21,7 @@ class NotebooksVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
         super.viewDidLoad()
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Notebook")
         do {
-            let objects = try AppDelegate().persistentContainer.viewContext.fetch(fetchRequest) as! [NSManagedObject]
+            let objects = try AppDelegate().persistentContainer.viewContext.fetch(fetchRequest) as! [Notebook]
             namesArray = optimize(objects: objects)
             objectsArray = objects
         } catch {
@@ -70,7 +70,7 @@ class NotebooksVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (namesArray?.count)!
+        return objectsArray.count
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -83,7 +83,7 @@ class NotebooksVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         let context = appDelegate.persistentContainer.viewContext
-        let object = objectsArray[indexPath.row] as NSManagedObject
+        let object = objectsArray[indexPath.row] as Notebook
         namesArray?.remove(at: indexPath.row)
         do {
             try print("before", context.count(for: NSFetchRequest<NSFetchRequestResult>(entityName: "Notebook")))
@@ -113,7 +113,10 @@ class NotebooksVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
         let cell = tableView.dequeueReusableCell(withIdentifier: "notebookCell") as! NotebooksCell
         let name = namesArray?[indexPath.row]
         //TODO: set text
-        cell.label.text = name 
+        cell.label.text = objectsArray[indexPath.row].name
+        print("indexpath.row: \(indexPath.row)")
+        //print(cell.label.text)
+        //print(objectsArray[indexPath.row].name)
         return cell
     }
     
@@ -121,6 +124,7 @@ class NotebooksVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
         let entity = NSEntityDescription.entity(forEntityName: "Notebook", in: appDelegate.persistentContainer.viewContext)
         let newNotebook = NSManagedObject(entity: entity!, insertInto: appDelegate.persistentContainer.viewContext)
         newNotebook.setValue(name, forKey: "name")
+        objectsArray.append(newNotebook as! Notebook)
         namesArray?.append(name)
         tableView.reloadData()
         do {
