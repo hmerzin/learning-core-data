@@ -15,18 +15,18 @@ class NotebooksVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
     var namesArray: [String]?
     var objectsArray = [Notebook]()
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    let array = ["asdf", "harry", "merzin", "1234"]
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Notebook")
         do {
-            let objects = try AppDelegate().persistentContainer.viewContext.fetch(fetchRequest) as! [Notebook]
-            namesArray = optimize(objects: objects)
-            objectsArray = objects
+             try objectsArray =  appDelegate.persistentContainer.viewContext.fetch(fetchRequest) as! [Notebook]
         } catch {
             fatalError("couldn't fetch")
         }
+        //self.tableView.register(NotebooksCell.self, forCellReuseIdentifier: "notebookCell")
     }
     
     func optimize(objects: [NSManagedObject]) -> [String]? {
@@ -110,13 +110,9 @@ class NotebooksVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "notebookCell") as! NotebooksCell
-        let name = namesArray?[indexPath.row]
-        //TODO: set text
-        cell.label.text = objectsArray[indexPath.row].name
-        print("indexpath.row: \(indexPath.row)")
-        //print(cell.label.text)
-        //print(objectsArray[indexPath.row].name)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "notebookCell", for: indexPath) as! NotebooksCell
+        let name = objectsArray[indexPath.row].name
+        cell.label?.text = name
         return cell
     }
     
