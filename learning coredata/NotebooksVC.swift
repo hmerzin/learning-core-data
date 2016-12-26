@@ -20,12 +20,13 @@ class NotebooksVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Notebook")
+        let fetchRequest = NSFetchRequest<Notebook>(entityName: "Notebook")
         do {
-             try objectsArray =  appDelegate.persistentContainer.viewContext.fetch(fetchRequest) as! [Notebook]
+             try objectsArray = appDelegate.persistentContainer.viewContext.fetch(fetchRequest)
         } catch {
             fatalError("couldn't fetch")
         }
+        print(objectsArray.count)
         //self.tableView.register(NotebooksCell.self, forCellReuseIdentifier: "notebookCell")
     }
     
@@ -79,6 +80,12 @@ class NotebooksVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
         return .delete
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let viewController = storyboard?.instantiateViewController(withIdentifier: "NotesVC") as! NotesVC
+        viewController.notebook = objectsArray[indexPath.row]
+        self.present(viewController, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
