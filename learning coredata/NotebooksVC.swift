@@ -30,20 +30,6 @@ class NotebooksVC: UIViewController, UITableViewDelegate, UITableViewDataSource 
         //self.tableView.register(NotebooksCell.self, forCellReuseIdentifier: "notebookCell")
     }
     
-    func optimize(objects: [NSManagedObject]) -> [String]? {
-        var names = [String] ()
-        for object in objects {
-            if let name = object.value(forKey: "name") {
-                names.append((name as! String))
-            }
-        }
-        if((names.count) > 0) {
-            return names
-        } else {
-            return []
-        }
-    }
-    
     func presentAddAlert() {
         let alert = UIAlertController(title: "New Notebook", message: "Add a new notebook", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "Save", style: .default, handler: { (action:UIAlertAction) -> Void in

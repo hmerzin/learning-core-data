@@ -11,7 +11,7 @@ import UIKit
 import CoreData
 
 class NotesVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
+    // use a stack or the other one to sort instead of nssort order to put in front of other notes
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     

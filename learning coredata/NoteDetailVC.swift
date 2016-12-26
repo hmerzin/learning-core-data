@@ -23,6 +23,7 @@ class NoteDetailVC: UIViewController {
         if(note != nil) {
             noteTextField.text = note?.text
         }
+        noteTextField.contentVerticalAlignment = .top
     }
     
     @IBAction func back(_ sender: Any) {
